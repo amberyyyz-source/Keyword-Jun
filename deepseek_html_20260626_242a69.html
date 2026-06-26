@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEO 问题库 · 外汇与交易关键词</title>
+    <!-- Tabler Icons (via CDN) 用于复制/勾选图标 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/tabler-icons.min.css">
+    <style>
+        /* ----- 完全独立，移除所有 CSS 变量，使用真实颜色值 ----- */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f8fafc;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            padding: 2rem 1.5rem;
+            color: #0b1a2f;
+        }
+
+        .geo-wrap {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 2rem 2rem 2.5rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        /* ----- 提示条 ----- */
+        .geo-tip {
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 14px 20px;
+            margin-bottom: 2rem;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #1e293b;
+            border-left: 4px solid #2563eb;
+        }
+        .geo-tip strong {
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        /* ----- 过滤栏 ----- */
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            align-items: center;
+            border-bottom: 1px solid #e9edf2;
+            padding-bottom: 1rem;
+        }
+        .filter-btn {
+            font-size: 13px;
+            padding: 6px 16px;
+            border-radius: 30px;
+            border: 1px solid #dce1e9;
+            background: transparent;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-weight: 500;
+            background: #ffffff;
+        }
+        .filter-btn:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+            color: #0f172a;
+        }
+        .filter-btn.active {
+            background: #1e293b;
+            border-color: #1e293b;
+            color: #ffffff;
+        }
+        .count-badge {
+            font-size: 13px;
+            color: #64748b;
+            margin-left: auto;
+            background: #f1f5f9;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-weight: 450;
+        }
+
+        /* ----- 区块 (section) ----- */
+        .section {
+            margin-bottom: 2.5rem;
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1.2rem;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eef2f6;
+            flex-wrap: wrap;
+        }
+        .section-tag {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 14px;
+            border-radius: 30px;
+            letter-spacing: 0.3px;
+        }
+        /* 标签真实颜色 */
+        .tag-blue { background: #e6f1fb; color: #0c447c; }
+        .tag-teal { background: #e1f5ee; color: #085041; }
+        .tag-amber { background: #faeeda; color: #633806; }
+        .tag-purple { background: #eeedfe; color: #3c3489; }
+        .tag-coral { background: #faece7; color: #712b13; }
+
+        .section-desc {
+            font-size: 13px;
+            color: #64748b;
+            margin-left: auto;
+            font-weight: 400;
+        }
+
+        /* ----- 卡片网格 ----- */
+        .q-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 12px;
+        }
+
+        /* ----- 卡片 ----- */
+        .q-card {
+            background: #ffffff;
+            border: 1px solid #e9edf2;
+            border-radius: 16px;
+            padding: 16px 18px;
+            cursor: pointer;
+            transition: border-color 0.15s, box-shadow 0.1s;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .q-card:hover {
+            border-color: #b9c4d4;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
+        .q-card.copied {
+            border-color: #1d9e75;
+            background: #f6fcf9;
+        }
+
+        .q-text {
+            font-size: 14px;
+            color: #0b1a2f;
+            line-height: 1.6;
+            margin: 0 0 10px;
+            font-weight: 450;
+        }
+
+        .q-meta {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .q-kw {
+            font-size: 11px;
+            color: #64748b;
+            background: #f1f5f9;
+            padding: 2px 10px;
+            border-radius: 30px;
+            font-weight: 450;
+            letter-spacing: 0.2px;
+        }
+        .q-intent {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 30px;
+            background: #f1f5f9;
+            color: #334155;
+        }
+        /* intent 颜色 (用于文字) */
+        .ic { color: #185fa5; }   /* Comparison */
+        .ih { color: #0f6e56; }   /* How-to */
+        .id { color: #534ab7; }   /* Definition */
+        .ib { color: #993c1d; }   /* Best pick */
+        .iw { color: #854f0b; }   /* Why */
+
+        /* 复制提示 */
+        .copy-hint {
+            font-size: 12px;
+            color: #94a3b8;
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            opacity: 0;
+            transition: opacity 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: #ffffff;
+            padding: 2px 8px 2px 6px;
+            border-radius: 30px;
+            border: 1px solid transparent;
+        }
+        .q-card:hover .copy-hint {
+            opacity: 1;
+        }
+        .q-card.copied .copy-hint {
+            color: #1d9e75;
+            opacity: 1;
+            border-color: #1d9e75;
+            background: #f0faf5;
+        }
+        .copy-hint i {
+            font-size: 16px;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 600px) {
+            body { padding: 1rem; }
+            .geo-wrap { padding: 1.5rem 1rem; }
+            .section-desc { display: none; }
+            .filter-bar { gap: 6px; }
+            .filter-btn { font-size: 12px; padding: 4px 12px; }
+            .q-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="geo-wrap">
+    <h2 class="sr-only">GEO question bank — forex and trading keywords in English</h2>
+
+    <div class="geo-tip">
+        <strong>GEO tip:</strong> These questions are written the way real users type them into Perplexity, ChatGPT Search, and Google SGE — not keyword-stuffed, but naturally phrased. Use them as H2 headings, FAQ schema entries, or content briefs. Click any card to copy.
+    </div>
+
+    <div class="filter-bar" id="filterBar">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="Comparison">Comparison</button>
+        <button class="filter-btn" data-filter="How-to">How-to</button>
+        <button class="filter-btn" data-filter="Definition">Definition</button>
+        <button class="filter-btn" data-filter="Best pick">Best pick</button>
+        <button class="filter-btn" data-filter="Why">Why</button>
+        <span class="count-badge" id="countBadge">39 questions</span>
+    </div>
+
+    <div id="questionList"><!-- 动态渲染 --></div>
+</div>
+
+<script>
+    // ---------- 数据 ----------
+    const questions = [
+        { text: "What's the difference between MetaTrader 4 and MetaTrader 5 — and which one should beginners use?", kw: "meta trader 5", intent: "Comparison", ic: "ic" },
+        { text: "What asset classes can you trade on MetaTrader 5 — forex, stocks, and futures all included?", kw: "meta trader 5", intent: "Definition", ic: "id" },
+        { text: "How do I download and set up MetaTrader 5 on my iPhone?", kw: "mt4 metatrader download", intent: "How-to", ic: "ih" },
+        { text: "Is MT4 or MT5 more reliable? Which platform do professional traders actually prefer?", kw: "meta trader 5", intent: "Comparison", ic: "ic" },
+
+        { text: "What's the difference between ETFs and individual stocks — and which is better for long-term investing?", kw: "etfs / etf funds", intent: "Comparison", ic: "ic" },
+        { text: "What exactly is an ETF and how does it work?", kw: "etfs", intent: "Definition", ic: "id" },
+        { text: "How are ETFs different from mutual funds, and what account do I need to buy one?", kw: "etf exchange", intent: "Comparison", ic: "ic" },
+        { text: "What are exchange traded investments — and what advantages do they have over traditional funds?", kw: "exchange traded investments", intent: "Definition", ic: "id" },
+        { text: "How do I buy my first ETF as a complete beginner — and which platform makes it easiest?", kw: "etf funds", intent: "How-to", ic: "ih" },
+
+        { text: "What is a forex broker and how do they actually make money?", kw: "forex broker", intent: "Definition", ic: "id" },
+        { text: "How can I tell if a forex broker is legitimate — what regulators should I look for?", kw: "forex broker", intent: "How-to", ic: "ih" },
+        { text: "What's the difference between a regulated and an unregulated forex broker?", kw: "forex broker", intent: "Comparison", ic: "ic" },
+        { text: "Which forex brokers have the tightest spreads in 2025 — and how do I compare them?", kw: "best forex trading platform", intent: "Best pick", ic: "ib" },
+        { text: "What should I look for when choosing a forex broker?", kw: "forex broker", intent: "How-to", ic: "ih" },
+
+        { text: "What is CFD trading and how is it different from buying shares outright?", kw: "cfd trading", intent: "Definition", ic: "id" },
+        { text: "How risky is CFD trading — can your losses actually exceed your deposit?", kw: "cfd trading", intent: "Why", ic: "iw" },
+        { text: "CFDs vs futures: what's the difference, and which is more suitable for retail traders?", kw: "cfd trading", intent: "Comparison", ic: "ic" },
+        { text: "What fees are involved in CFD trading — how are spreads and overnight charges calculated?", kw: "cfd trading", intent: "How-to", ic: "ih" },
+
+        { text: "What's the fundamental difference between trading forex and trading stocks?", kw: "trading forex / fx trade", intent: "Comparison", ic: "ic" },
+        { text: "How big is the forex market daily, and who are the main participants?", kw: "forex trading", intent: "Definition", ic: "id" },
+        { text: "How do forex traders actually make money — what's the profit logic?", kw: "trading forex", intent: "Why", ic: "iw" },
+        { text: "What do I need to learn before I start trading forex as a complete beginner?", kw: "trading forex", intent: "How-to", ic: "ih" },
+
+        { text: "What features should the best forex trading platform have?", kw: "best forex trading platform", intent: "Best pick", ic: "ib" },
+        { text: "What's the difference between a forex trading platform and a CFD platform?", kw: "fx trading platform", intent: "Comparison", ic: "ic" },
+        { text: "Are 'currency trading platforms' and 'forex platforms' the same thing?", kw: "currency trading platforms", intent: "Definition", ic: "id" },
+        { text: "Which forex trading platform is easiest for beginners to get started with in 2025?", kw: "platform for trading forex", intent: "Best pick", ic: "ib" },
+        { text: "Is it better to trade forex on mobile or desktop for day-to-day use?", kw: "fx trading platform", intent: "Comparison", ic: "ic" },
+
+        { text: "What's the difference between a demo trading account and a live account?", kw: "demo trading account", intent: "Comparison", ic: "ic" },
+        { text: "How long should you practice on a demo account before going live?", kw: "demo trading", intent: "How-to", ic: "ih" },
+        { text: "Does a demo account accurately reflect real slippage and execution speed?", kw: "forex trading demo account", intent: "Why", ic: "iw" },
+        { text: "Which platforms offer a forex demo account with no time limit?", kw: "demo trading account", intent: "Best pick", ic: "ib" },
+
+        { text: "What's the difference between day trading and swing trading — and which suits people with a full-time job?", kw: "day trading / trader swing", intent: "Comparison", ic: "ic" },
+        { text: "How do you pick entry points in day trading — what are the most common strategies?", kw: "day trading how to", intent: "How-to", ic: "ih" },
+        { text: "How long do swing traders typically hold positions, and how do you set a stop-loss?", kw: "trader swing", intent: "How-to", ic: "ih" },
+        { text: "How much screen time does day trading actually require?", kw: "day trading how to", intent: "Why", ic: "iw" },
+
+        { text: "Is forex betting the same as forex trading — what's the actual difference?", kw: "forex betting", intent: "Definition", ic: "id" },
+        { text: "How does spread betting on forex differ from CFD trading in terms of tax treatment?", kw: "forex betting", intent: "Comparison", ic: "ic" },
+
+        { text: "What does 'FX trade' mean — is it any different from 'forex trading'?", kw: "fx trade", intent: "Definition", ic: "id" },
+        { text: "What security risks should I watch out for when downloading a trading platform?", kw: "trading download", intent: "How-to", ic: "ih" },
+    ];
+
+    const sectionMeta = {
+        "Comparison": { tag: "tag-blue", desc: "AI loves these — covers two sides at once" },
+        "How-to":     { tag: "tag-teal", desc: "Step-by-step content gets extracted often" },
+        "Definition": { tag: "tag-purple", desc: "Builds topical authority" },
+        "Best pick":  { tag: "tag-coral", desc: "High-conversion intent" },
+        "Why":        { tag: "tag-amber", desc: "Signals depth and expertise" },
+    };
+
+    let activeFilter = "all";
+
+    // ---------- 渲染 ----------
+    function render() {
+        const filtered = activeFilter === "all" ? questions : questions.filter(q => q.intent === activeFilter);
+        document.getElementById("countBadge").textContent = filtered.length + " questions";
+
+        // 按 intent 分组
+        const sections = {};
+        filtered.forEach(q => {
+            if (!sections[q.intent]) sections[q.intent] = [];
+            sections[q.intent].push(q);
+        });
+
+        const container = document.getElementById("questionList");
+        let html = "";
+
+        Object.keys(sectionMeta).forEach(key => {
+            if (!sections[key]) return;
+            const meta = sectionMeta[key];
+            const cards = sections[key].map((q, idx) => {
+                // 生成唯一id (用于复制提示)
+                const uid = key.replace(/\s/g,'-') + '-' + idx;
+                return `
+                    <div class="q-card" onclick="copyQ(this, ${JSON.stringify(q.text)})">
+                        <span class="copy-hint" id="h-${uid}"><i class="ti ti-copy" aria-hidden="true"></i> copy</span>
+                        <p class="q-text">${q.text}</p>
+                        <div class="q-meta">
+                            <span class="q-intent ${q.ic}">${q.intent}</span>
+                            <span class="q-kw">${q.kw}</span>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+
+            html += `
+                <div class="section">
+                    <div class="section-header">
+                        <span class="section-tag ${meta.tag}">${key}</span>
+                        <span class="section-desc">${meta.desc}</span>
+                    </div>
+                    <div class="q-grid">${cards}</div>
+                </div>
+            `;
+        });
+
+        container.innerHTML = html;
+    }
+
+    // ---------- 复制功能 ----------
+    function copyQ(el, text) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).catch(() => {});
+        } else {
+            // fallback
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+        }
+        // UI 反馈
+        el.classList.add("copied");
+        const hint = el.querySelector(".copy-hint");
+        if (hint) {
+            hint.innerHTML = '<i class="ti ti-check" aria-hidden="true"></i> copied';
+        }
+        setTimeout(() => {
+            el.classList.remove("copied");
+            if (hint) {
+                hint.innerHTML = '<i class="ti ti-copy" aria-hidden="true"></i> copy';
+            }
+        }, 1500);
+    }
+
+    // ---------- 过滤事件 ----------
+    document.getElementById("filterBar").addEventListener("click", function(e) {
+        const btn = e.target.closest(".filter-btn");
+        if (!btn) return;
+        activeFilter = btn.dataset.filter;
+        document.querySelectorAll(".filter-btn").forEach(b => b.classList.toggle("active", b === btn));
+        render();
+    });
+
+    // 初始渲染
+    render();
+</script>
+</body>
+</html>
